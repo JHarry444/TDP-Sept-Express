@@ -8,6 +8,8 @@ const server = require("../index"); // imports the server so I can send requests
 
 const { duckModel } = require("../db");
 
+const mongoose = require("mongoose")
+
 describe("duck tests", () => {
 
     let testDuck;
@@ -60,4 +62,30 @@ describe("duck tests", () => {
             done(); // tells mocha the test has finished
         })
     });
+
+    it("should update a duck", (done) => {
+        chai.request(server).patch("/ducks/updateDuck/" + testDuck._id).query({
+            name: "Harry"
+        }).end((err, res) => {
+            chai.expect(err).to.be.null;
+            chai.expect(res.status).to.equal(200);
+            testDuck.name = "Harry";
+            chai.expect(res.body).to.include(testDuck);
+            done(); // tells mocha the test has finished
+        })
+    });
+
+    it("should delete a duck", (done) => {
+        chai.request(server).delete("/ducks/removeDuck/" + testDuck._id).end((err, res) => {
+            chai.expect(err).to.be.null;
+            chai.expect(res.status).to.equal(200);
+            chai.expect(res.body).to.include(testDuck);
+            done(); // tells mocha the test has finished
+        })
+    });
+
+    after((done) => {
+        mongoose.disconnect(() => done());
+    })
+
 })

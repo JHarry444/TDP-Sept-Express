@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests/ --reporter=nyan --exit",
+    "test": "mocha tests/ --reporter=nyan",
     "start": "nodemon index.js",
     "names": "nodemon solutions/names.js"
   },
