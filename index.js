@@ -36,3 +36,5 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500).send(err.message || "oops");
 })
 const server = app.listen(4494, () => console.log(`Server successfully started on port ${server.address().port}`));
+
+module.exports = server; // exported so I can use it for tests
