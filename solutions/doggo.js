@@ -17,6 +17,4 @@ const doggoCompetition = (place) => {
     return places;
 }
 
-console.log(doggoCompetition(44));
-
 module.exports = doggoCompetition;

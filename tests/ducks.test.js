@@ -6,7 +6,29 @@ chai.use(chaiHttp); // adds the http plugin
 
 const server = require("../index"); // imports the server so I can send requests to it
 
+const { duckModel } = require("../db");
+
 describe("duck tests", () => {
+
+    let testDuck;
+
+    beforeEach(async () => {
+        try {
+            await duckModel.deleteMany({});
+            testDuck = await duckModel.create({
+                name: "Barry",
+                colour: "Blue",
+                disposition: "Content"
+            });
+            testDuck = JSON.parse(JSON.stringify(testDuck));
+            console.log();
+        } catch(err) {
+            console.error(err)
+        }
+    })
+
+
+
     it("should create a duck", (done) => {
         const newDuck = {
             "name": "Daffy",
@@ -19,5 +41,23 @@ describe("duck tests", () => {
             chai.expect(res.body).to.include(newDuck);
             done(); // tells mocha the test has finished
         })
-    })
+    });
+
+    it("should get a duck", (done) => {
+        chai.request(server).get("/ducks/getDuck/" + testDuck._id).end((err, res) => {
+            chai.expect(err).to.be.null;
+            chai.expect(res.status).to.equal(200);
+            chai.expect(res.body).to.include(testDuck);
+            done(); // tells mocha the test has finished
+        })
+    });
+
+    it("should get all ducks", (done) => {
+        chai.request(server).get("/ducks/getAllDucks/").end((err, res) => {
+            chai.expect(err).to.be.null;
+            chai.expect(res.status).to.equal(200);
+            chai.expect(res.body).to.deep.include(testDuck);
+            done(); // tells mocha the test has finished
+        })
+    });
 })

@@ -4,9 +4,14 @@ const { duckModel } = require("../db");
 router.get("/getAllDucks", (req, res) => duckModel.find({}).then(results => res.send(results)).catch(err => next(err)));
 
 
-router.get("/getDuck/:id", (req, res, next) => {
+router.get("/getDuck/:id", async (req, res, next) => {
     const {id} = req.params;
-    duckModel.findById(id)
+    try {
+        const found = await duckModel.findById(id);
+        res.send(found);
+    } catch(err) {
+        return next(err);
+    }
 });
 
 router.post("/createDuck", async (req, res, next) => {
